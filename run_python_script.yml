@@ -1,0 +1,22 @@
+---
+- name: run Python script
+  hosts: all
+  tasks:
+    - name: run cars.py script
+      ansible.builtin.script:
+        executable: python3
+        cmd: cars.py
+      register: cars_raw_output
+
+    - name: print cars_raw_output
+      ansible.builtin.debug:
+        var: cars_raw_output
+        verbosity: 2
+
+    - name: convert output to JSON
+      ansible.builtin.set_fact:
+        cars_list: "{{ cars_raw_output.stdout | from_json }}"
+
+    - name: print cars_list
+      ansible.builtin.debug:
+        var: cars_list
